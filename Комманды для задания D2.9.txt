@@ -1,0 +1,59 @@
+python manage.py makemigrations
+python manage.py migrate
+python manage.py shell 
+from news.models import *
+user1 = User.objects.create_user('User1') 
+user2 = User.objects.create_user('User2')
+author1 = Author.objects.create(user=user1)
+author2 = Author.objects.create(user=user2)
+
+category_sport = Category.objects.create(name='Спорт')
+category_technologies = Category.objects.create(name='Технологии')
+category_medicine = Category.objects.create(name='Медицина')
+category_transport = Category.objects.create(name='Транспорт')
+
+post1 = Post.objects.create(title='Шок контент', text='Первая запись в БД', type=POST_NEWS, author=author1)                                    
+post1.category.add(category_technologies)
+post1.save()
+
+
+post2 = Post.objects.create(title='Статья 1', text='Туда сюда', type=POST_ARTICLE, author=author2)                                    
+post2.category.add(category_sport)
+post2.category.add(category_transport)
+post2.save()
+
+
+post3 = Post.objects.create(title='Статья 2', text='Отсюда посюда', type=POST_ARTICLE, author=author2)                                    
+post3.category.add(category_technologies)
+post3.category.add(category_medicine)
+post3.save()
+
+comment1 = Comment.objects.create(post=post1, user=user1, text='Первый')  
+comment2 = Comment.objects.create(post=post2, user=user1, text='Первый')  
+comment3 = Comment.objects.create(post=post3, user=user1, text='Первый')  
+comment4 = Comment.objects.create(post=post3, user=user2, text='Второй')  
+
+comment1.like()
+comment2.like()
+comment3.like()
+comment4.dislike()
+
+post1.like()
+post2.like()
+post3.dislike()
+
+author1.update_rating()
+author2.update_rating()
+
+best_author = Author.objects.all().order_by('-_rating')[0] 
+best_author.user.username  
+best_author.rating  
+
+best_post = Post.objects.all().order_by('-_rating')[0]
+best_post.create_date_time
+best_post.rating 
+best_post.author.user.username
+best_post.preview()
+best_post.title 
+
+Comment.objects.filter(post=best_post).values('create_date_time','user','_rating','text') 
