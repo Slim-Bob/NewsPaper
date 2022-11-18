@@ -95,3 +95,7 @@ class Comment(models.Model):
     def dislike(self):
         self._rating -= 1
         self.save()
+
+
+class Censorship(models.Model):
+    pattern = models.TextField()
