@@ -8,18 +8,20 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>Все новости/статьи</h1>
+    <h1>Поиск по новостям/статьям</h1>
+
+    <form action="" method="get">
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Найти" />
+    </form>
+
     <hr>
-    <a href="/news/news/create/">Создать новость</a>
-    <a href="/news/articles/create/">Создать статью</a>
     {% if posts %}
         <table>
             <tr>
                 <td>Название</td>
                 <td>Описание</td>
                 <td>Дата</td>
-                <td></td>
-                <td></td>
             </tr>
 
             {% for post in posts %}
@@ -27,16 +29,6 @@
                     <td>{{ post.title }}</td>
                     <td>{{ post.preview|truncatechars:20 }}</td>
                     <td>{{ post.create_date_time|date:'M d Y' }}</td>
-                    {% if post.type == "NS" %}
-                        <td><a href="/news/news/{{ post.pk }}/edit/">изменить</a></td>
-                        <td><a href="/news/news/{{ post.pk }}/delete/">удалить</a></td>
-                    {% elif post.type == "AE" %}
-                        <td><a href="/news/articles/{{ post.pk }}/edit/">изменить</a></td>
-                        <td><a href="/news/articles/{{ post.pk }}/delete/">удалить</a></td>
-                    {% else %}
-                        <td></td>
-                        <td></td>
-                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
