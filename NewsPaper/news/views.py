@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
 
 from .forms import PostForm
@@ -41,8 +42,9 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class NewsCreate(LoginRequiredMixin, CreateView):
+class NewsCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     raise_exception = True
+    permission_required = ('news.add_post',)
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
@@ -56,8 +58,9 @@ class NewsCreate(LoginRequiredMixin, CreateView):
     success_url = '/news'
 
 
-class NewsUpdate(LoginRequiredMixin, UpdateView):
+class NewsUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     raise_exception = True
+    permission_required = ('news.change_post',)
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
@@ -65,15 +68,17 @@ class NewsUpdate(LoginRequiredMixin, UpdateView):
     success_url = '/news'
 
 
-class NewsDelete(LoginRequiredMixin, DeleteView):
+class NewsDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     raise_exception = True
+    permission_required = ('news.delete_post',)
     model = Post
     template_name = 'news_delete.html'
     success_url = '/news'
 
 
-class ArticlesCreate(LoginRequiredMixin, CreateView):
+class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     raise_exception = True
+    permission_required = ('news.add_post',)
     form_class = PostForm
     model = Post
     template_name = 'articles_edit.html'
@@ -87,8 +92,9 @@ class ArticlesCreate(LoginRequiredMixin, CreateView):
     success_url = '/news'
 
 
-class ArticlesUpdate(LoginRequiredMixin, UpdateView):
+class ArticlesUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     raise_exception = True
+    permission_required = ('news.change_post',)
     form_class = PostForm
     model = Post
     template_name = 'articles_edit.html'
@@ -96,7 +102,8 @@ class ArticlesUpdate(LoginRequiredMixin, UpdateView):
     success_url = '/news'
 
 
-class ArticlesDelete(LoginRequiredMixin, DeleteView):
+class ArticlesDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post',)
     raise_exception = True
     model = Post
     template_name = 'articles_delete.html'

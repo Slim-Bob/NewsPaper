@@ -10,16 +10,23 @@
 {% block content %}
     <h1>Все новости/статьи</h1>
     <hr>
+{% if perms.news.add_post %}
     <a href="/news/news/create/">Создать новость</a>
     <a href="/news/articles/create/">Создать статью</a>
+{% endif %}
+
     {% if posts %}
         <table>
             <tr>
                 <td>Название</td>
                 <td>Описание</td>
                 <td>Дата</td>
+                {% if perms.news.change_post %}
                 <td></td>
+                {% endif %}
+                {% if perms.news.delete_post %}
                 <td></td>
+                {% endif %}
             </tr>
 
             {% for post in posts %}
@@ -27,15 +34,25 @@
                     <td>{{ post.title }}</td>
                     <td>{{ post.preview|truncatechars:20 }}</td>
                     <td>{{ post.create_date_time|date:'M d Y' }}</td>
-                    {% if post.type == "NS" %}
-                        <td><a href="/news/news/{{ post.pk }}/edit/">изменить</a></td>
-                        <td><a href="/news/news/{{ post.pk }}/delete/">удалить</a></td>
-                    {% elif post.type == "AE" %}
-                        <td><a href="/news/articles/{{ post.pk }}/edit/">изменить</a></td>
-                        <td><a href="/news/articles/{{ post.pk }}/delete/">удалить</a></td>
-                    {% else %}
-                        <td></td>
-                        <td></td>
+
+                    {% if perms.news.change_post %}
+                        {% if post.type == "NS" %}
+                            <td><a href="/news/news/{{ post.pk }}/edit/">изменить</a></td>
+                        {% elif post.type == "AE" %}
+                            <td><a href="/news/articles/{{ post.pk }}/edit/">изменить</a></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if perms.news.delete_post %}
+                        {% if post.type == "NS" %}
+                            <td><a href="/news/news/{{ post.pk }}/delete/">удалить</a></td>
+                        {% elif post.type == "AE" %}
+                            <td><a href="/news/articles/{{ post.pk }}/delete/">удалить</a></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
                     {% endif %}
                 </tr>
             {% endfor %}
