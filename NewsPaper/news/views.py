@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
 
 from .forms import PostForm
@@ -40,7 +41,8 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class NewsCreate(CreateView):
+class NewsCreate(LoginRequiredMixin, CreateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
@@ -54,7 +56,8 @@ class NewsCreate(CreateView):
     success_url = '/news'
 
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(LoginRequiredMixin, UpdateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
@@ -62,13 +65,15 @@ class NewsUpdate(UpdateView):
     success_url = '/news'
 
 
-class NewsDelete(DeleteView):
+class NewsDelete(LoginRequiredMixin, DeleteView):
+    raise_exception = True
     model = Post
     template_name = 'news_delete.html'
     success_url = '/news'
 
 
-class ArticlesCreate(CreateView):
+class ArticlesCreate(LoginRequiredMixin, CreateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'articles_edit.html'
@@ -82,7 +87,8 @@ class ArticlesCreate(CreateView):
     success_url = '/news'
 
 
-class ArticlesUpdate(UpdateView):
+class ArticlesUpdate(LoginRequiredMixin, UpdateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'articles_edit.html'
@@ -90,7 +96,8 @@ class ArticlesUpdate(UpdateView):
     success_url = '/news'
 
 
-class ArticlesDelete(DeleteView):
+class ArticlesDelete(LoginRequiredMixin, DeleteView):
+    raise_exception = True
     model = Post
     template_name = 'articles_delete.html'
     success_url = '/news'
