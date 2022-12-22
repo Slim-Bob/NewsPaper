@@ -37,6 +37,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    subcribers = models.ManyToManyField(User, related_name='categories')
 
     def __str__(self):
         return self.name
@@ -76,6 +77,9 @@ class Post(models.Model):
     def preview(self):
         return f'{self.text[:120]}...'
 
+    def __str__(self):
+        return f'{ self.title }'
+
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -103,6 +107,12 @@ class Comment(models.Model):
         self._rating -= 1
         self.save()
 
+    def __str__(self):
+        return f'{ self.text }'
+
 
 class Censorship(models.Model):
     pattern = models.TextField()
+
+    def __str__(self):
+        return f'{ self.pattern }'

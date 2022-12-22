@@ -44,8 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'news',
+    'news.apps.NewsConfig',
     # 'accounts',
+    'django_apscheduler',
     'django_filters',
     'django.contrib.sites',
     'allauth',
@@ -152,12 +153,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-
 SOCIALACCOUNT_PROVIDERS = {
     'yandex': {
         # For each OAuth based provider, either add a ``SocialApp``
@@ -170,3 +165,33 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+SITE_URL = env('SITE_URL')
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+
+ADMINS = [
+    ('Dmitriy', env('EMAIL_MY')),
+]
+
+MANAGERS = [
+    ('Dmitriy', env('EMAIL_MY')),
+]
+
+SERVER_EMAIL = env('EMAIL_DEFAULT')
+
+DEFAULT_FROM_EMAIL = env('EMAIL_DEFAULT')
+
+LOGIN_REDIRECT_URL = "/news"
+
+ACCOUNT_UNIQUE_EMAIL = False
+ACCOUNT_EMAIL_VRIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTIFICATION_METHOD = 'email'
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25

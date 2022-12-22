@@ -4,11 +4,12 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
 
 from .forms import PostForm
-from .models import Post, POST_NEWS, POST_ARTICLE
+from .models import Post, POST_NEWS, POST_ARTICLE, Category
 from .filters import PostsSearchFilter
 
 from django.http import HttpResponse, HttpResponseRedirect
-
+from django.shortcuts import redirect, get_object_or_404, render
+from django.contrib.auth.decorators import login_required
 
 class PostsList(ListView):
     model = Post
@@ -108,3 +109,41 @@ class ArticlesDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'articles_delete.html'
     success_url = '/news'
+
+
+class CategoryListView(ListView):
+    model = Post
+    template_name = 'category_list.html'
+    context_object_name = 'category_news_list'
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(category=self.category).order_by('-create_date_time')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        contex = super().get_context_data(**kwargs)
+        contex['is_not_subscriber'] = self.request.user not in self.category.subcribers.all()
+        contex['category'] = self.category
+        return contex
+
+@login_required
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subcribers.add(user)
+
+    message = f'Подписались на категорию {category}'
+    return redirect(request.META['HTTP_REFERER'])
+        # render(request, 'subscribe.html', {'category':category, 'message': message})
+
+
+@login_required
+def unsubscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subcribers.remove(user)
+
+    message = f'Отписались от категории {category}'
+    return redirect(request.META['HTTP_REFERER'])
+        # render(request, 'unsubscribe.html', {'category':category, 'message': message})
