@@ -38,8 +38,8 @@ def notify_about_new_post(sender, instance, **kwargs):
         emails = list(categories.values_list('subcribers__email', flat=True))
 
         # test.delay()
-        # Можно просто передать post.pk, но была рекомендация что бы в задачу передавались только данные.
-        # Мне кажется это не совсем верным, ошибаюсь?
+        # ToDo Можно просто передать post.pk, но была рекомендация что бы в задачу передавались только данные. Мне кажется это не совсем верным, ошибаюсь?
+        # ToDo Посмотреть что есть по блокировкам, что бы разруливать ситуации когда один и тот же объект прявят несколько пользователей
         send_notifications_category.delay(emails=emails, preview=instance.preview(), pk=instance.pk, title=instance.title)
 
         # Вынесено в задачу
