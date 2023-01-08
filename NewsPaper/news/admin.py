@@ -1,9 +1,6 @@
 from django.contrib import admin
 from .models import Category, Author, Post, PostCategory, Comment, Censorship
 
-list_display = [field.name for field in Post._meta.get_fields()]
-print(list_display)
-
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
     list_filter = ('name',)
