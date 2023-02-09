@@ -12,6 +12,11 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 
 from django.core.cache import cache
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 class PostsList(ListView):
     model = Post
@@ -19,6 +24,15 @@ class PostsList(ListView):
     template_name = 'posts.html'
     context_object_name = 'posts'
     paginate_by = 10
+
+    def setup(self, request, *args, **kwargs):
+        logger.info('INFO')
+        super(PostsList, self).setup(request, *args, **kwargs)
+
+
+    def get_queryset(self):
+        logger.info('INFO')
+        return super().get_queryset()
 
 
 class PostsSearch(ListView):
@@ -28,12 +42,18 @@ class PostsSearch(ListView):
     context_object_name = 'posts'
     paginate_by = 5
 
+    # def setup(self, request, *args, **kwargs):
+    #     super(PostsList, self).setup(request, *args, **kwargs)
+    #     logger.info('INFO')
+
     def get_queryset(self):
+        logger.info('INFO')
         queryset = super().get_queryset()
         self.filterset = PostsSearchFilter(self.request.GET, queryset)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
+        logger.info('INFO')
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         return context
@@ -136,6 +156,7 @@ class CategoryListView(ListView):
         contex['is_not_subscriber'] = self.request.user not in self.category.subcribers.all()
         contex['category'] = self.category
         return contex
+
 
 @login_required
 def subscribe(request, pk):
